@@ -75,10 +75,11 @@ class Parsers::CsvParser
   end
 
   def parse_product(line)
+    nbsp = [194.chr, 160.chr].join
     product = Product.new({
       :name => line[CSV_PRODUCT_MAPPING[:name]],
       :description => line[CSV_PRODUCT_MAPPING[:description]],
-      :price => line[CSV_PRODUCT_MAPPING[:price]].sub(' руб.', '').sub(',', '.').gsub(' ', '').to_f,
+      :price => line[CSV_PRODUCT_MAPPING[:price]].sub(' руб.', '').sub(',', '.').gsub(nbsp, '').to_f,
       :count_on_hand => line[CSV_PRODUCT_MAPPING[:count_on_hand]],
       :available_on => Date.today
     })
