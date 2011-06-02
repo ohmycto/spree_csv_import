@@ -3,21 +3,21 @@ require 'state_machine'
 
 namespace :spree_csv_import do
 
-  desc 'Parse all files'
+  desc 'Parse all csv files'
   task :parse_csv => :environment do
-    files_to_parse = Dir.glob(File.join(Rails.root, "public/csv_imports/*.csv"))
+    path_to_csv = File.join(Rails.root, "public/csv_imports")
+    path_to_complete_csv = File.join(path_to_csv, "completed")
+    mkdir_p(path_to_complete_csv)
+
+    taxonomy = Taxonomy.find_by_id(ARGV[1])
+    taxonomy ||= Taxonomy.first
+
+    files_to_parse = Dir.glob("#{path_to_csv}/*.csv")
     files_to_parse.each do |f|
-      parse_csv_file(f)
+      csv_parser = Parsers::CsvParser.new(:taxon => taxonomy.root)
+      FasterCSV.foreach(f) do |line|
+        csv_parser.parse(line)
+      end
     end
   end
-end
-
-def parse_csv_file(file)
-  csv_parser = Parsers::CsvParser.new(:taxon => Taxon.first)
-
-  FasterCSV.foreach(file) do |line|
-    csv_parser.parse(line)
-  end
-
-  puts csv_parser.taxons.map(&:name)
 end

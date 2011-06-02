@@ -12,7 +12,9 @@ class Parsers::CsvParser
     state :root do
       def parse(line)
         return if line[0].blank?
-        parse_taxon(line)
+        taxon = parse_taxon(line)
+        @initial_taxon.children << taxon
+        @current_root_taxon = @current_taxon = taxon
         self.to_taxon_state
       end
     end
@@ -23,7 +25,10 @@ class Parsers::CsvParser
           @current_taxon = @initial_taxon
           self.to_root_state
         elsif line[0] && !line[1]
-          parse_taxon(line)
+          taxon = parse_taxon(line)
+          @current_taxon.children << taxon
+          puts "Added \"#{taxon.name}\" to taxons"
+          @current_taxon = taxon
         else
           parse_product(line)
           self.to_product_state
@@ -37,7 +42,10 @@ class Parsers::CsvParser
           @current_taxon = @initial_taxon
           self.to_root_state
         elsif line[0] && !line[1]
-          parse_taxon(line)
+          taxon = parse_taxon(line)
+          @current_root_taxon.children << taxon
+          puts "Added \"#{taxon.name}\" to products"
+          @current_taxon = taxon
           self.to_taxon_state
         else
           parse_product(line)
@@ -54,28 +62,50 @@ class Parsers::CsvParser
     end
 
     event :to_product_state do
-      transition :product => :taxon, :root => :taxon
+      transition :taxon => :product, :root => :product
     end
   end
 
   def initialize(options = {})
     @taxons = []
     @products = []
-    @initial_taxon = @current_taxon = options.delete(:taxon)
+    @initial_taxon = options.delete(:taxon)
+    @current_taxon = @initial_taxon
     super()
   end
 
   def parse_product(line)
-    product = Product.new({ :name => line[2] })
+    product = Product.new({
+      :name => line[CSV_PRODUCT_MAPPING[:name]],
+      :description => line[CSV_PRODUCT_MAPPING[:description]],
+      :price => line[CSV_PRODUCT_MAPPING[:price]].sub(' руб.', '').sub(',', '.').gsub(' ', '').to_f,
+      :count_on_hand => line[CSV_PRODUCT_MAPPING[:count_on_hand]],
+      :available_on => Date.today
+    })
+    image_urls = line[CSV_PRODUCT_MAPPING[:image_urls]]
+
+    image_urls.split(' ').each do |url|
+      product.images << Image.new(:attachment => download_remote_image(url))
+    end if image_urls
     @products << product
-    #@current_taxon.products << product
+    @current_taxon.products << product
+    puts " -- Added product \"#{product.name}\" to database"
   end
 
   def parse_taxon(line)
-    taxon = Taxon.new({ :name => line[0], :taxonomy_id => @current_taxon.taxonomy_id })
+    taxon = Taxon.find_by_name(line[0])
+    taxon ||= Taxon.new({
+      :name => line[0],
+      :taxonomy_id => @current_taxon.taxonomy_id
+    })
     @taxons << taxon
-    @current_taxon = @current_root_taxon
-    #@current_taxon.children << taxon
-    @current_taxon = taxon
+    taxon
   end
+end
+
+def download_remote_image(image_url)
+  io = open(URI.parse(image_url))
+  def io.original_filename; [base_uri.path.split('/').last, '.jpg'].join; end
+  io.original_filename.blank? ? nil : io
+rescue # catch url errors with validations instead of exceptions (Errno::ENOENT, OpenURI::HTTPError, etc...)
 end
