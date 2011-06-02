@@ -21,5 +21,4 @@ namespace :spree_csv_import do
       Spree::FileUtilz.mirror_files(source, destination)
     end
   end
-
 end
