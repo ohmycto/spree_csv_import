@@ -86,7 +86,8 @@ class Parsers::CsvParser
     image_urls = line[CSV_PRODUCT_MAPPING[:image_urls]]
 
     image_urls.split(' ').each do |url|
-      product.images << Image.new(:attachment => download_remote_image(url))
+      img = download_remote_image(url)
+      product.images << Image.new(:attachment => download_remote_image(url)) if img
     end if image_urls
     @products << product
     @current_taxon.products << product
@@ -106,7 +107,7 @@ end
 
 def download_remote_image(image_url)
   io = open(URI.parse(image_url))
-  def io.original_filename; [base_uri.path.split('/').last, '.jpg'].join; end
+  def io.original_filename; 'image.jpg'; end
   io.original_filename.blank? ? nil : io
 rescue # catch url errors with validations instead of exceptions (Errno::ENOENT, OpenURI::HTTPError, etc...)
 end
