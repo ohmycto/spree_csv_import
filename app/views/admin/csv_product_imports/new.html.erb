@@ -1,0 +1,21 @@
+<% if @csv_product_import.try(:errors).present? %>
+  <%= render 'shared/error_messages', :target => @csv_product_import %>
+<% end %>
+
+<%= form_for @csv_product_import do |f| %>
+  <p>
+    <%= f.label :taxonomy_id, t("taxonomy_id") %><br/>
+    <%= f.error_message_on :taxonomy_id %>
+    <%= f.select "taxonomy_id", Taxonomy.all.collect {|p| [ p.name, p.id ] } %>
+  </p>
+
+  <p>
+    <%= f.label :file, t("file") %>
+    <%= f.error_message_on :file %>
+    <%= f.file_field :file %>
+  </p>
+
+  <p>
+    <%= f.submit t("upload") %>
+  </p>
+<% end %>
