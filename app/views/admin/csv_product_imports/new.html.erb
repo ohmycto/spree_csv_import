@@ -6,17 +6,20 @@
 
 <%= form_for [:admin, @csv_product_import], :html => { :multipart => true } do |f| %>
   <p>
-    <%= f.label :taxonomy_id, t("taxonomy") %><br/>
+    <%= f.label :taxonomy_id, t("csv_import.taxonomy") %><br/>
     <%= f.error_message_on :taxonomy_id %>
     <%= f.select "taxonomy_id", Taxonomy.all.collect {|p| [ p.name, p.id ] } %>
   </p>
 
   <p>
-    <%= label_tag :file, t("file") %>
+    <%= label_tag :file, t("csv_import.file") %>
     <%= file_field_tag :file %>
   </p>
 
   <p>
-    <%= f.submit t("create") %>
+    <p class="form-buttons">
+      <%= button t("actions.create") %>
+      <%= t("or") %> <%= link_to t("actions.cancel"), admin_csv_product_imports_path %>
+    </p>
   </p>
 <% end %>

@@ -8,3 +8,7 @@ ru:
     in_process: В работе
     there_is_no_csv_tasks: Нет данных для отображения
     import_csv: Импорт CSV
+    taxonomy: Таксономия
+    file: Файл
+
+  csv_product_imports: Импорт CSV
