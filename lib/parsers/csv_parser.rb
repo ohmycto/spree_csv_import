@@ -27,7 +27,6 @@ class Parsers::CsvParser
         elsif line[0] && !line[1]
           taxon = parse_taxon(line)
           @current_taxon.children << taxon
-          puts "Added \"#{taxon.name}\" to taxons"
           @current_taxon = taxon
         else
           parse_product(line)
@@ -44,7 +43,6 @@ class Parsers::CsvParser
         elsif line[0] && !line[1]
           taxon = parse_taxon(line)
           @current_root_taxon.children << taxon
-          puts "Added \"#{taxon.name}\" to products"
           @current_taxon = taxon
           self.to_taxon_state
         else
@@ -91,7 +89,6 @@ class Parsers::CsvParser
     end if image_urls
     @products << product
     @current_taxon.products << product
-    puts " -- Added product \"#{product.name}\" to database"
   end
 
   def parse_taxon(line)

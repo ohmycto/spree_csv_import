@@ -1,3 +1,3 @@
 class CsvProductImport < ActiveRecord::Base
-  validates_length_of :file, :maximum => 100
+  validates_length_of :filename, :maximum => 100
 end

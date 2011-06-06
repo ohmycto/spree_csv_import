@@ -2,7 +2,7 @@
   <%= render 'shared/error_messages', :target => @csv_product_import %>
 <% end %>
 
-<%= form_for @csv_product_import do |f| %>
+<%= form_for [:admin, @csv_product_import], :html => { :multipart => true } do |f| %>
   <p>
     <%= f.label :taxonomy_id, t("taxonomy_id") %><br/>
     <%= f.error_message_on :taxonomy_id %>
@@ -10,9 +10,8 @@
   </p>
 
   <p>
-    <%= f.label :file, t("file") %>
-    <%= f.error_message_on :file %>
-    <%= f.file_field :file %>
+    <%= label_tag :file, t("file") %>
+    <%= file_field_tag :file %>
   </p>
 
   <p>

@@ -1,6 +1,6 @@
 <h1>Csv Imports:</h1>
 
-<% if @csv_imports.any? %>
+<% if @csv_product_imports.any? %>
 <table>
   <tr>
     <th>Дата импорта</th>
@@ -8,17 +8,17 @@
     <th>Кол-во импортированных товаров</th>
     <th></th>
   </tr>
-  <% @csv_imports.each do |ci| %>
+  <% @csv_product_imports.each do |ci| %>
   <tr>
     <td><%= ci.created_at.to_s %></td>
-    <td><%= ci.file %></td>s
+    <td><%= ci.filename %></td>
     <td><%= ci.product_counts %></td>
-    <td><%= link_to 'show', '#' %></td>
+    <td><%= link_to 'show', admin_csv_product_import_path(ci) %></td>
   </tr>
   <% end %>
 </table>
 <% else %>
-  <div>There is no csv imports</div>
+  <div>There is no csv tasks</div>
 <% end %>
 
 <%= link_to "<span>Import CSV</span>".html_safe, new_admin_csv_product_import_path, :class => 'button' %>

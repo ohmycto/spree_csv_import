@@ -1,8 +1,12 @@
 class CreateCsvProductImports < ActiveRecord::Migration
   def self.up
     create_table :csv_product_imports do |t|
-      t.string :file, :limit => 100
+      t.string :filename, :limit => 100
       t.integer :product_counts
+      t.references :taxonomy
+      t.datetime :parsed_date, :default => nil
+
+      t.timestamps
     end
   end
 
