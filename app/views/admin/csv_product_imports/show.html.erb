@@ -1,9 +1,21 @@
-<h1>Import_csv_information</h1>
+<h1><%= t('csv_import.csv_imports') %></h1>
 
 <p>
-  Filename: <%= @csv_product_import.filename %>
+  <%= t('csv_import.filename') %>: <%= @csv_product_import.filename %>
 </p>
 
 <p>
+  <%= t('csv_import.import_date') %>: <%= @csv_product_import.created_at.to_s %>
+</p>
 
+<p>
+  <%= t('csv_import.parsed_date') %>: <%= @csv_product_import.parsed_date.to_s %>
+</p>
+
+<p>
+  <%= t('csv_import.imported_products_count') %>: <%= @csv_product_import.products_count %>
+</p>
+
+<p>
+  <%= link_to t('back'), admin_csv_product_imports_path %>
 </p>

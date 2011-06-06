@@ -1,1 +1,10 @@
 ru:
+  csv_import:
+    csv_imports: Импорт CSV
+    import_date: Дата импорта
+    parsed_date: Дата окончания импорта
+    filename: Наименование файла
+    imported_products_count: Количество импортируемых товаров
+    in_process: В работе
+    there_is_no_csv_tasks: Нет данных для отображения
+    import_csv: Импорт CSV

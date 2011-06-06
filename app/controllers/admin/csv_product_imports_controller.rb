@@ -18,7 +18,7 @@ class Admin::CsvProductImportsController < Admin::BaseController
         file.write(@file.read)
       end
 
-      command = %{cd #{Rails.root} && RAILS_ENV=#{Rails.env} rake spree_csv_import:parse_csv #{@csv_product_import.taxonomy_id} #{@file.original_filename} &}
+      command = %{cd #{Rails.root} && RAILS_ENV=#{Rails.env} rake spree_csv_import:parse_csv #{@csv_product_import.id} &}
       system command
 
       redirect_to admin_csv_product_imports_path

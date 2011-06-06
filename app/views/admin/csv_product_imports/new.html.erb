@@ -1,10 +1,12 @@
+<h1><%= t('csv_import.csv_imports') %></h1>
+
 <% if @csv_product_import.try(:errors).present? %>
   <%= render 'shared/error_messages', :target => @csv_product_import %>
 <% end %>
 
 <%= form_for [:admin, @csv_product_import], :html => { :multipart => true } do |f| %>
   <p>
-    <%= f.label :taxonomy_id, t("taxonomy_id") %><br/>
+    <%= f.label :taxonomy_id, t("taxonomy") %><br/>
     <%= f.error_message_on :taxonomy_id %>
     <%= f.select "taxonomy_id", Taxonomy.all.collect {|p| [ p.name, p.id ] } %>
   </p>
@@ -15,6 +17,6 @@
   </p>
 
   <p>
-    <%= f.submit t("upload") %>
+    <%= f.submit t("create") %>
   </p>
 <% end %>
