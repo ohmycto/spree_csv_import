@@ -3,18 +3,26 @@
 <% if @csv_product_imports.any? %>
 <table class="index">
   <tr>
+    <th><%= t('csv_import.status') %></th>
     <th><%= t('csv_import.import_date') %></th>
     <th><%= t('csv_import.parsed_date') %></th>
     <th><%= t('csv_import.filename') %></th>
-    <th><%= t('csv_import.imported_products_count') %></th>
+    <th><%= t('csv_import.update_only') %></th>
+    <th><%= t('csv_import.inserted_products_count') %></th>
+    <th><%= t('csv_import.updated_products_count') %></th>
+    <th><%= t('csv_import.loaded_images_count') %></th>
     <th></th>
   </tr>
   <% @csv_product_imports.each do |ci| %>
   <tr>
+    <td><%= t("csv_import.status_#{ci.status}") %></td>
     <td><%= ci.created_at.to_s %></td>
-    <td><%= ci.parsed_date ? ci.parsed_date.to_s : t('csv_import.in_process') %></td>
+    <td><%= ci.parsed_date %></td>
     <td><%= ci.filename %></td>
-    <td><%= ci.products_count %></td>
+    <td><%= ci.update_only ? t(:yes) : t(:no) %></td>
+    <td><%= ci.inserted_products_count %></td>
+    <td><%= ci.updated_products_count %></td>
+    <td><%= ci.loaded_images_count %></td>
     <td><%= link_to t('show'), admin_csv_product_import_path(ci) %></td>
   </tr>
   <% end %>

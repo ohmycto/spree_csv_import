@@ -17,6 +17,11 @@
   </p>
 
   <p>
+    <%= label_tag :update_only, t("csv_import.update_only") %>
+    <%= f.check_box :update_only %>
+  </p>
+
+  <p>
     <p class="form-buttons">
       <%= button t("actions.create") %>
       <%= t("or") %> <%= link_to t("actions.cancel"), admin_csv_product_imports_path %>

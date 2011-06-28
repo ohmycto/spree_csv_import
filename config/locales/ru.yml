@@ -4,11 +4,21 @@ ru:
     import_date: Дата импорта
     parsed_date: Дата окончания импорта
     filename: Наименование файла
-    imported_products_count: Количество импортируемых товаров
-    in_process: В работе
+    updated_products_count: Обновленных товаров
+    inserted_products_count: Добавленных товаров
+    loaded_images_count: Загруженных изображений
     there_is_no_csv_tasks: Нет данных для отображения
     import_csv: Импорт CSV
     taxonomy: Таксономия
     file: Файл
+    manufacturer: Производитель
+    update_only: Только обновлять уже существующие товары
+    status: Статус задачи
+    code: Код товара
+
+    status_: Неизвестный статус
+    status_error: Ошибка
+    status_completed: Завершено
+    status_in_progress: В работе
 
   csv_product_imports: Импорт CSV

@@ -1,6 +1,7 @@
 CSV_PRODUCT_MAPPING = {
         :code => 0,
         :name => 2,
+        :manufacturer => 3,
         :price => 4,
         :count_on_hand => 5,
         :image_urls => 6,

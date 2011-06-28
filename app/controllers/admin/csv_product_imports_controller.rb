@@ -9,7 +9,8 @@ class Admin::CsvProductImportsController < Admin::BaseController
   end
 
   def create
-    @csv_product_import = CsvProductImport.new(params[:csv_product_import])
+    parameters = params[:csv_product_import]
+    @csv_product_import = CsvProductImport.new(parameters.merge({ :status => 'in_progress' }))
     @file = params[:file]
     @csv_product_import.filename = @file.original_filename
 
@@ -18,7 +19,7 @@ class Admin::CsvProductImportsController < Admin::BaseController
         file.write(@file.read)
       end
 
-      command = %{cd #{Rails.root} && RAILS_ENV=#{Rails.env} rake spree_csv_import:parse_csv #{@csv_product_import.id} &}
+      command = %{cd #{Rails.root} && RAILS_ENV=#{Rails.env} rake spree_csv_import:parse_csv task_id=#{@csv_product_import.id}#{" update_only=1" if @csv_product_import.update_only} &}
       system command
 
       redirect_to admin_csv_product_imports_path

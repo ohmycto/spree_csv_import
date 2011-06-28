@@ -6,8 +6,8 @@ namespace :spree_csv_import do
   desc 'Parse all csv files'
   task :parse_csv => :environment do
     path_to_csv = File.join(Rails.root, "tmp")
-    if ARGV.length == 2
-      csv_task_id = ARGV[1]
+    if ENV['task_id'].present?
+      csv_task_id = ENV['task_id']
       csv_task = CsvProductImport.find_by_id(csv_task_id)
 
       if csv_task
@@ -15,26 +15,53 @@ namespace :spree_csv_import do
         taxonomy = csv_task.taxonomy
         csv_file = File.join(path_to_csv, filename)
       end
-    else
-      filename = ARGV[2]
-      taxonomy = Taxonomy.find_by_id(ARGV[1])
+    elsif ENV['input_file'].present?
+      filename = ENV['input_file']
+      taxonomy = Taxonomy.find_by_id(ENV['taxonomy'])
       taxonomy ||= Taxonomy.first
       csv_file = File.join(path_to_csv, filename)
     end
+    allow_insert = ENV['update_only'].nil?
 
-    if File.exist?(csv_file) && taxonomy
-      csv_parser = Parsers::CsvParser.new(:taxon => taxonomy.root)
-      FasterCSV.foreach(csv_file) do |line|
-        csv_parser.parse(line)
-      end
+    if csv_file.present? && File.exist?(csv_file)
+      if taxonomy
 
-      if csv_task.present?
-        csv_task.parsed_date = DateTime.now
-        csv_task.products_count = csv_parser.products.count
-        csv_task.save
+        begin
+          csv_parser = Parsers::CsvParser.new({:taxon => taxonomy.root, :allow_insert => allow_insert})
+          FasterCSV.foreach(csv_file) do |line|
+            csv_parser.parse(line)
+          end
+
+          if csv_task.present?
+            csv_task.parsed_date = DateTime.now
+            csv_task.status = 'completed'
+            csv_task.inserted_products_count = csv_parser.inserted_products.count
+            csv_task.updated_products_count = csv_parser.updated_products.count
+            csv_task.loaded_images_count = csv_parser.loaded_images_count
+            csv_task.save
+          end
+        rescue
+          set_error_status_for_csv_task csv_task
+        end
       else
-        puts "--- There is no task"
+        set_error_status_for_csv_task csv_task
+        puts "There is no taxonomy"
       end
+    else
+      if csv_file.nil?
+        puts "Filename not presented"
+      else
+        puts "File #{csv_file} doesn't exist"
+      end
+      set_error_status_for_csv_task csv_task
     end
+  end
+end
+
+def set_error_status_for_csv_task(task)
+  if task.present?
+    task.parsed_date = DateTime.now
+    task.status = 'error'
+    task.save
   end
 end

@@ -1,6 +1,10 @@
 <h1><%= t('csv_import.csv_imports') %></h1>
 
 <p>
+  <%= t('csv_import.status')%>: <%= t("csv_import.status_#{@csv_product_import.status}") %>
+</p>
+
+<p>
   <%= t('csv_import.filename') %>: <%= @csv_product_import.filename %>
 </p>
 
@@ -13,7 +17,15 @@
 </p>
 
 <p>
-  <%= t('csv_import.imported_products_count') %>: <%= @csv_product_import.products_count %>
+  <%= t('csv_import.update_only') %>: <%= @csv_product_import.update_only ? t(:yes) : t(:no) %>
+</p>
+
+<p>
+  <%= t('csv_import.inserted_products_count') %>: <%= @csv_product_import.inserted_products_count %>
+</p>
+
+<p>
+  <%= t('csv_import.updated_products_count') %>: <%= @csv_product_import.updated_products_count %>
 </p>
 
 <p>
