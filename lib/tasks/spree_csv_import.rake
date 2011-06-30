@@ -12,22 +12,22 @@ namespace :spree_csv_import do
 
       if csv_task
         filename = csv_task.filename
-        taxonomy = csv_task.taxonomy
+        taxon = csv_task.taxon
         csv_file = File.join(path_to_csv, filename)
       end
     elsif ENV['input_file'].present?
       filename = ENV['input_file']
-      taxonomy = Taxonomy.find_by_id(ENV['taxonomy'])
-      taxonomy ||= Taxonomy.first
+      taxon = Taxon.find_by_id(ENV['taxon'])
+      taxon ||= Taxonomy.first.root
       csv_file = File.join(path_to_csv, filename)
     end
     allow_insert = ENV['update_only'].nil?
 
     if csv_file.present? && File.exist?(csv_file)
-      if taxonomy
+      if taxon
 
         begin
-          csv_parser = Parsers::CsvParser.new({:taxon => taxonomy.root, :allow_insert => allow_insert})
+          csv_parser = Parsers::CsvParser.new({:taxon => taxon, :allow_insert => allow_insert})
           FasterCSV.foreach(csv_file) do |line|
             csv_parser.parse(line)
           end

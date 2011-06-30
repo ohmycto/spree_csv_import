@@ -9,7 +9,7 @@ ru:
     loaded_images_count: Загруженных изображений
     there_is_no_csv_tasks: Нет данных для отображения
     import_csv: Импорт CSV
-    taxonomy: Таксономия
+    taxon: Таксон
     file: Файл
     manufacturer: Производитель
     update_only: Только обновлять уже существующие товары
